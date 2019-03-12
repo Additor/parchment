@@ -190,7 +190,7 @@ class ParentBlot extends ShadowBlot implements Parent {
     }
   }
 
-  public insertBefore(childBlot: Blot, refBlot?: Blot | null): void {
+  public insertBefore(childBlot: Blot, refBlot?: Blot | null, insertDom: Boolean = true): void {
     if (childBlot.parent != null) {
       childBlot.parent.children.remove(childBlot);
     }
@@ -199,12 +199,20 @@ class ParentBlot extends ShadowBlot implements Parent {
     if (refBlot != null) {
       refDomNode = refBlot.domNode;
     }
-    if (
-      this.domNode.parentNode !== childBlot.domNode ||
-      this.domNode.nextSibling !== refDomNode
-    ) {
-      this.domNode.insertBefore(childBlot.domNode, refDomNode);
+    
+    // @ts-ignore
+    // _fromUpdate: mutationUpdate (내가 직접 변경한 dom) 에 의한 blot 인지 판별하는 flag
+    if (!(!insertDom && childBlot._fromUpdate)) {
+      if (
+        this.domNode.parentNode !== childBlot.domNode ||
+        this.domNode.nextSibling !== refDomNode
+      ) {
+        this.domNode.insertBefore(childBlot.domNode, refDomNode);
+      }
     }
+    
+    // @ts-ignore
+    childBlot._fromUpdate = false;
     childBlot.parent = this;
     childBlot.attach();
   }
@@ -365,6 +373,8 @@ class ParentBlot extends ShadowBlot implements Parent {
           if (blot.parent != null) {
             blot.parent.removeChild(this);
           }
+          // @ts-ignore
+          blot._fromUpdate = true;
           this.insertBefore(blot, refBlot || undefined);
         }
       });
