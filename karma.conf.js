@@ -6,13 +6,15 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
     files: [
       'test/parchment.ts',
+      'test/setup.js',
       'test/registry/*.js',
       'test/unit/linked-list.js', // Control test order
       'test/unit/registry.js',
       'test/unit/attributor.js',
       'test/unit/blot.js',
-      'test/unit/container.js',
+      'test/unit/parent.js',
       'test/unit/scroll.js',
+      'test/unit/container.js',
       'test/unit/block.js',
       'test/unit/inline.js',
       'test/unit/embed.js',
@@ -49,7 +51,7 @@ module.exports = function(config) {
       'saucelabs-chrome': {
         base: 'SauceLabs',
         browserName: 'Chrome',
-        platform: 'OS X 10.11',
+        platform: 'OS X 10.13',
         version: 'beta',
       },
     },
